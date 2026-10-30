@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102033">
+  <meta name="description" content="Evidence-based call summary QA workspace for car-finance collections teams.">
+  <title>Call Review | QA Workspace</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <div class="workspace">
+    <aside class="sidebar" aria-label="Call navigation">
+      <div class="brand"><div class="brand-mark">✓</div><div><strong>Call Review</strong><span>QA WORKSPACE</span></div></div>
+      <div class="side-description">Transcript-grounded review for collections call summaries.</div>
+      <section class="progress-block" aria-label="Review progress"><div class="progress-header"><span>Review progress</span><strong id="progress-label">0 / 20</strong></div><div class="progress-track"><div id="progress-bar"></div></div><div class="metric-row"><div><b id="approved-count">0</b><span>Acceptable</span></div><div><b id="correction-count">0</b><span>Correct</span></div><div><b id="uncertain-count">0</b><span>Uncertain</span></div></div></section>
+      <label class="form-label" for="call-search">Find a call</label><input id="call-search" type="search" placeholder="Search call ID..." autocomplete="off">
+      <label class="form-label" for="status-filter">Review status</label><select id="status-filter"><option value="all">All calls</option><option value="unreviewed">Not reviewed</option><option value="acceptable">Acceptable</option><option value="needs-correction">Needs correction</option><option value="uncertain">Uncertain</option></select>
+      <div class="list-heading"><span>CALLS</span><span id="filter-count">20 shown</span></div>
+      <div id="call-list" class="call-list" aria-label="Calls"></div>
+      <div class="sidebar-footer"><button id="export-btn" class="button secondary wide">Export QA report <span aria-hidden="true">↓</span></button><button id="rules-btn" class="button text wide">View summary rules ↗</button><p>Saved locally in this browser. Export before switching devices.</p></div>
+    </aside>
+    <main class="main-content" id="main-content">
+      <div class="main-top"><div><div class="eyebrow">REVIEW WORKSPACE <span class="dot">•</span> TRANSCRIPT AS SOURCE OF TRUTH</div><h1>Call summary quality assurance</h1><p>Compare, substantiate and record a defensible decision. Do not assume each summary has an error.</p></div><div class="review-standard"><span class="stand-dot"></span> Manual evidence-led review</div></div>
+      <div id="loading" class="loading">Loading sample calls...</div>
+      <div id="app-content" hidden>
+        <div class="call-heading"><div><div id="call-id" class="call-id">CALL-001</div><div id="call-meta" class="meta"></div></div><div class="heading-controls"><button id="prev-btn" class="button secondary small" aria-label="Previous call">← Previous</button><button id="next-btn" class="button secondary small" aria-label="Next call">Next →</button></div></div>
+        <div id="heuristic-banner" class="signal-banner" hidden></div>
+        <div class="review-grid">
+          <section class="panel transcript-panel" aria-labelledby="transcript-title"><div class="panel-heading"><div><div class="eyebrow">REFERENCE EVIDENCE</div><h2 id="transcript-title">Full transcript</h2></div><div id="turn-count" class="small-label"></div></div><p class="panel-help">Select a transcript turn to attach it as evidence to a finding.</p><div id="transcript" class="transcript" tabindex="0"></div></section>
+          <div class="right-column"><section class="panel summary-panel" aria-labelledby="summary-title"><div class="panel-heading"><div><div class="eyebrow">OUTPUT TO REVIEW</div><h2 id="summary-title">Generated summary</h2></div><div id="current-status" class="status-badge">Not reviewed</div></div><p id="summary-text" class="summary-text"></p></section>
+            <section class="panel judgement-panel" aria-labelledby="judgement-title"><div class="panel-heading"><div><div class="eyebrow">REVIEWER JUDGEMENT</div><h2 id="judgement-title">Review outcome</h2></div></div><p class="panel-help">Choose an outcome after evaluating the transcript and required rules.</p><div class="judgement-options"><button type="button" data-status="acceptable" class="decision-button accept"><span>✓</span> Acceptable</button><button type="button" data-status="needs-correction" class="decision-button correct"><span>!</span> Needs correction</button><button type="button" data-status="uncertain" class="decision-button unsure"><span>?</span> Uncertain</button></div><label class="form-label" for="review-notes">Overall rationale (optional)</label><textarea id="review-notes" rows="3" placeholder="Why is this summary acceptable, inaccurate or uncertain?"></textarea><div class="saved-label" id="saved-label" aria-live="polite">Changes save automatically in this browser</div></section>
+          </div>
+        </div>
+        <section class="panel finding-panel" aria-labelledby="findings-title"><div class="panel-heading"><div><div class="eyebrow">AUDIT TRAIL</div><h2 id="findings-title">Evidence-backed findings <span id="finding-count" class="count-pill">0</span></h2></div></div><div id="findings-list" class="findings-list"></div><form id="finding-form" class="finding-form"><div class="form-grid"><div><label for="finding-type" class="form-label">Issue type</label><select id="finding-type" required><option value="contradiction">Contradiction</option><option value="unsupported">Unsupported claim</option><option value="omission">Required omission</option><option value="rule-breach">Rule breach</option></select></div><div><label for="finding-severity" class="form-label">Impact</label><select id="finding-severity"><option value="high">High — may mislead colleague</option><option value="medium">Medium — material detail</option><option value="low">Low — presentation / minor</option></select></div></div><label class="form-label" for="finding-description">What is wrong, and why?</label><textarea id="finding-description" rows="2" required placeholder="Describe the specific discrepancy or rule violation..."></textarea><div class="form-grid"><div><label class="form-label" for="evidence-ids">Transcript evidence (turn IDs)</label><input type="text" id="evidence-ids" placeholder="e.g. T03, T12 (or click turns above)"></div><div><label class="form-label" for="finding-fix">Suggested correction</label><input type="text" id="finding-fix" placeholder="What should the summary say instead?"></div></div><div class="form-footer"><p>Use call ID + turn IDs for reproducible evidence. A finding requires an explanation.</p><button class="button primary" type="submit">+ Add finding</button></div></form></section>
+        <section class="panel correction-panel" aria-labelledby="correction-title"><div class="panel-heading"><div><div class="eyebrow">OPTIONAL REMEDIATION</div><h2 id="correction-title">Proposed corrected summary</h2></div><button id="copy-correction" class="button secondary small" type="button">Copy text</button></div><p class="panel-help">Edit only if a correction is needed. The supplied summary remains unchanged above.</p><textarea id="corrected-summary" rows="4" placeholder="Enter an improved summary following the supplied rules..."></textarea></section>
+        <p class="method-note">Scope: the transcript is the reference, not external account records. Automated hints are limited and require human confirmation. Reviews are browser-local until exported.</p>
+      </div>
+    </main>
+  </div>
+  <dialog id="rules-dialog" class="rules-dialog"><div class="dialog-header"><div><div class="eyebrow">SOURCE DOCUMENT</div><h2>Summary generation rules</h2></div><button type="button" id="close-rules" class="button secondary small">Close ✕</button></div><pre id="rules-text"></pre></dialog>
+  <div id="toast" role="status" aria-live="polite" class="toast" hidden></div>
+</body>
+</html>
